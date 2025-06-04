@@ -27,3 +27,15 @@
     100% { transform: rotate(360deg); }
 
 }
+
+#bannerImage{
+    height: 400px;
+    background-image: url('https://plus.unsplash.com/premium_photo-1683892034683-b6896f6245f9?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Zm9vZCUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.testimonial_para{
+    text-align: justify;
+}
