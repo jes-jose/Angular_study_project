@@ -30,7 +30,7 @@ export class ApiService {
     loginApi(reqbody:any){
       console.log(reqbody);
       
-      return this.http.get(`${this.serverurl}/login`,reqbody)
+      return this.http.post(`${this.serverurl}/login`,reqbody)
     }
   
 }
