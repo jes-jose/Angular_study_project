@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../service/api.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -28,7 +29,12 @@ export class RegisterComponent {
   register(){
 
     if(this.registerForm.invalid){
-      alert("Invalid data");
+      Swal.fire({
+              title:"Oops",
+              text:"Please fill the form",
+              icon:'info',
+              confirmButtonText:'ok'
+            })
     }
     else{
       //using registerApi injucted in this class to make api functions - returns observable -use partial observable -contains object with keys as next:+ve response error:-ve response 
@@ -38,6 +44,22 @@ export class RegisterComponent {
           
         },
         error:(error:any)=>{
+          if(error.status == 401){
+            Swal.fire({
+                    title:"Oops",
+                    text:"User Already Exsit",
+                    icon:'info',
+                    confirmButtonText:'ok'
+                  })
+          }
+          else{
+            Swal.fire({
+                    title:"Oops",
+                    text:"Something went wrong",
+                    icon:'error',
+                    confirmButtonText:'ok'
+                  })
+          }
           console.log(error);
           
         }

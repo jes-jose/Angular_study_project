@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../service/api.service';
+import Swal from 'sweetalert2';
 
 /*
 
@@ -29,8 +30,12 @@ import { ApiService } from '../service/api.service';
 
 ----------------------------------------------------------------------------------------------------------------------------
 
+
+## ngOnInit - to call functions and such tasks when loading a page -same use as useEffect() in reactjs
+
+
 */
-@Component({ 
+@Component({
   selector: 'app-login',
   imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './login.component.html',
@@ -38,29 +43,61 @@ import { ApiService } from '../service/api.service';
 })
 export class LoginComponent {
 
-  loginForm:FormGroup
-  constructor(private formBuilder: FormBuilder , private api:ApiService) { 
+  loginForm: FormGroup
+  constructor(private formBuilder: FormBuilder, private api: ApiService, private router:Router) {
     this.loginForm = formBuilder.group({
-      email:["",[Validators.required,Validators.email]],
-      password:["",[Validators.required,Validators.pattern('[a-zA-Z0-9#$%]*')]]
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", [Validators.required, Validators.pattern('[a-zA-Z0-9#$%]*')]]
     })
   }
 
-  login(){
+  login() {
     console.log(this.loginForm.value);
-    
-    if(this.loginForm.invalid){
-      alert("Invalid Data. Please login details and try again");
+
+    if (this.loginForm.invalid) {
+      Swal.fire({
+        title: "Oops",
+        text: "Please fill the form",
+        icon: 'info',
+        confirmButtonText: 'ok'
+      })
     }
-    else{
+    else {
       this.api.loginApi(this.loginForm.value).subscribe({
-        next:(result:any)=>{
-          console.log(result);
+        next: (result: any) => {
+
+
           
+            Swal.fire({
+            title: "Oops",
+            text: "Login successful",
+            icon: 'info',
+            confirmButtonText: 'ok'
+          })
+          sessionStorage.setItem("user",JSON.stringify(result.existingUser))
+          sessionStorage.setItem("token",JSON.stringify(result.token))
+          this.router.navigateByUrl('/');
+
+
         },
-        error:(error:any)=>{
-          console.log(error);
-          
+        error: (error: any) => {
+          if (error.status == 401) {
+            Swal.fire({
+              title: "Oops",
+              text: "User Not Found",
+              icon: 'error',
+              confirmButtonText: 'ok'
+            })
+          }
+          else if (error.status == 404) {
+            Swal.fire({
+              title: "Oops",
+              text: "Invalid email or password",
+              icon: 'error',
+              confirmButtonText: 'ok'
+            })
+          }
+
         }
       })
     }

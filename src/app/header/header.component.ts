@@ -9,4 +9,13 @@ import { RouterLink } from '@angular/router';
 })
 export class HeaderComponent {
 
+  isLogin:boolean = false;
+  loginUser:string = "";
+
+  ngOnInit(){
+    if(sessionStorage.getItem("token")){
+      this.isLogin = true;
+      this.loginUser = JSON.parse(sessionStorage.getItem("existingUser") || "").username;
+    }
+  }
 }
